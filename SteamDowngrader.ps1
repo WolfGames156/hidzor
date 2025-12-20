@@ -338,7 +338,7 @@ Write-Host '       \ \`_\ _..-''    \  (\(~   |.------------.|' -ForegroundColor
 Write-Host '        \/  ``        / \(~/     || ALL DONE!! ||' -ForegroundColor Cyan
 Write-Host '         \__    __..-'' -   ''.    || """"  """" ||' -ForegroundColor Cyan
 Write-Host '          \ \```             \   || discord.gg ||' -ForegroundColor Cyan
-Write-Host '          ;\ \o               ;  || zoream.pa  ||' -ForegroundColor Cyan
+Write-Host '          ;\ \o               ;  || SYS_0xA7   ||' -ForegroundColor Cyan
 Write-Host '          | \ \               |  ||____________||' -ForegroundColor Cyan
 Write-Host '          ;  \ \              ;  ''------..------''' -ForegroundColor Cyan
 Write-Host '           \  \ \ _.-''\      /          ||' -ForegroundColor Cyan
