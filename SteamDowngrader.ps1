@@ -4,24 +4,31 @@ Clear-Host
 $identity  = [Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = New-Object Security.Principal.WindowsPrincipal($identity)
 
+# Script path fallback
+$scriptPath = if ($PSCommandPath) {
+    $PSCommandPath
+} else {
+    $MyInvocation.MyCommand.Path
+}
+
+if (-not $scriptPath) {
+    Write-Host "Script dosya olarak çalıştırılmalıdır (.ps1)." -ForegroundColor Red
+    Pause
+    exit
+}
+
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
 
     Write-Host "Administrator yetkisi gerekli. Yeniden başlatılıyor..." -ForegroundColor Yellow
 
-    $arguments = @(
-        "-NoProfile"
-        "-ExecutionPolicy Bypass"
-        "-NoExit"
-        "-File `"$PSCommandPath`""
-    )
-
     Start-Process powershell.exe `
         -Verb RunAs `
-        -ArgumentList $arguments
+        -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -File `"$scriptPath`""
 
     exit
 }
 # ----------------------------------------------------
+
 
 
 Write-Host "===============================================================" -ForegroundColor DarkYellow
