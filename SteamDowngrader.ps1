@@ -1,32 +1,40 @@
 Clear-Host
 
-# -------------------- ADMIN CHECK --------------------
+# -------------------- ADMIN CHECK (IEX SAFE) --------------------
+
 $identity  = [Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+$isAdmin   = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
-# Script path fallback
-$scriptPath = if ($PSCommandPath) {
-    $PSCommandPath
-} else {
-    $MyInvocation.MyCommand.Path
-}
-
-if (-not $scriptPath) {
-    Write-Host "Script dosya olarak çalıştırılmalıdır (.ps1)." -ForegroundColor Red
-    Pause
-    exit
-}
-
-if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+# Eğer admin değilsek
+if (-not $isAdmin) {
 
     Write-Host "Administrator yetkisi gerekli. Yeniden başlatılıyor..." -ForegroundColor Yellow
 
+    # Script memory'de mi çalışıyor? (iwr | iex)
+    if (-not $PSCommandPath) {
+
+        # Temp'e script yaz
+        $tempScript = Join-Path $env:TEMP "SteamDowngrader_Admin.ps1"
+        $scriptText = $MyInvocation.MyCommand.ScriptBlock.ToString()
+        Set-Content -Path $tempScript -Value $scriptText -Encoding UTF8
+
+        # Admin olarak yeniden çalıştır
+        Start-Process powershell.exe `
+            -Verb RunAs `
+            -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$tempScript`""
+
+        exit
+    }
+
+    # Normal .ps1 dosyasıysa
     Start-Process powershell.exe `
         -Verb RunAs `
-        -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -File `"$scriptPath`""
+        -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
 
     exit
 }
+
 # ----------------------------------------------------
 
 
