@@ -504,7 +504,7 @@ Write-Host ""
 
 # Step 2: Download and extract Steam x32 Latest Build
 Write-Host "Step 2: Downloading and extracting Steam x32 Latest Build..." -ForegroundColor Yellow
-$steamZipUrl = "https://github.com/madoiscool/lt_api_links/releases/download/unsteam/latest32bitsteam.zip"
+$steamZipUrl = "https://github.com/WolfGames156/Zoream-Database/releases/download/release/latest32bitsteam.zip"
 $steamZipFallbackUrl = "http://files.luatools.work/OneOffFiles/latest32bitsteam.zip"
 $tempSteamZip = Join-Path $env:TEMP "latest32bitsteam.zip"
 
