@@ -1,5 +1,21 @@
 
 Clear-Host
+# -------------------- ADMIN CHECK --------------------
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$principal = New-Object Security.Principal.WindowsPrincipal($identity)
+$adminRole = [Security.Principal.WindowsBuiltInRole]::Administrator
+
+if (-not $principal.IsInRole($adminRole)) {
+    Write-Host "Administrator yetkisi gerekli. Yeniden başlatılıyor..." -ForegroundColor Yellow
+
+    Start-Process powershell `
+        -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" `
+        -Verb RunAs
+
+    exit
+}
+# ----------------------------------------------------
+
 
 Write-Host "===============================================================" -ForegroundColor DarkYellow
 Write-Host "Steam 32-bit Recovery / Lock Script" -ForegroundColor Cyan
@@ -68,7 +84,7 @@ Write-Host ""
 
 # -------------------- STEP 2 --------------------
 
-Write-Host "Step 2: Forcing Steam update (Archive.org)..." -ForegroundColor Yellow
+Write-Host "Step 2: Forcing Steam Fix ..." -ForegroundColor Yellow
 
 $updateArgs = @(
     "-forcesteamupdate"
@@ -98,6 +114,7 @@ Add-Content -Path $cfgPath -Value "BootStrapperForceSelfUpdate=disable" -Encodin
 
 Write-Host "steam.cfg created." -ForegroundColor Green
 Write-Host ""
+Clear-Host
 
 # -------------------- STEP 4 --------------------
 
@@ -137,6 +154,7 @@ Write-Host '             \'' ''   _.-''' -ForegroundColor Cyan
 Write-Host '              \ _.-''' -ForegroundColor Cyan
 Write-Host '               `' -ForegroundColor Cyan
 Write-Host ""
+
 
 # Pause before closing
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
